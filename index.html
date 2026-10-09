@@ -5,178 +5,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>AI AVTO & CodeUstoz</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Three.js 3D Graphic Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- FontAwesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-    /* Bottom Navigation Tab Bar */
-    #tab-bar {
+    /* Asosiy Ekran Qavatlari */
+    .app-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 60px);
+      display: none;
+      overflow: hidden;
+    }
+    .app-screen.is-active {
+      display: block !important;
+    }
+
+    /* Pastki Tab Bar */
+    #bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
+      width: 100vw;
       height: 60px;
-      background: rgba(18, 18, 20, 0.95);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: #090d16;
+      border-top: 1px solid #1e293b;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      z-index: 9999;
+      z-index: 99999;
     }
-    .tab-btn {
+    .nav-btn {
       background: none;
       border: none;
-      color: #8e8e93;
+      color: #64748b;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 3px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: color 0.15s ease;
     }
-    .tab-btn i { font-size: 19px; }
-    .tab-btn.active { color: #34c759; }
-
-    /* Content Views */
-    .view-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 60px);
-      display: none;
+    .nav-btn.active {
+      color: #22c55e;
     }
-    .view-container.active { display: flex; }
+    .nav-btn i {
+      font-size: 20px;
+    }
 
     /* ======================================================== */
-    /* 1. REAL PRAVATEST EDU 3D AVTODROM SECTION               */
+    /* 1-EKRAN: PRAVATEST EDU 3D AVTODROM                       */
     /* ======================================================== */
-    #avtodrom-view {
+    #screen-avtodrom {
       position: relative;
       background: #87CEEB;
-      width: 100%;
-      height: calc(100% - 60px);
-      overflow: hidden;
     }
-    #three-viewport {
+    #three-canvas {
       width: 100%;
       height: 100%;
       display: block;
     }
 
-    /* HUD Elements exact matching PravaTest EDU Screenshot */
-    .hud-glass-btn {
-      background: rgba(30, 30, 35, 0.72);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: #ffffff;
-      border-radius: 12px;
+    /* HUD elementlari */
+    .prava-hud-btn {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       cursor: pointer;
     }
-    .hud-glass-btn:active { transform: scale(0.94); background: rgba(45, 45, 55, 0.9); }
-
-    /* Top Left Bar */
-    .top-left-hud {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 100;
-    }
-    .badge-imtihon {
-      background: #2563eb;
-      color: #ffffff;
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-
-    /* Top Right Minimap & Action icons */
-    .top-right-hud {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
-      z-index: 100;
-    }
-    .prava-minimap {
-      width: 110px;
-      height: 70px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(10px);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-    }
-    .minimap-road-h { position: absolute; top: 32px; left: 0; width: 100%; height: 12px; background: #334155; }
-    .minimap-road-v { position: absolute; left: 50px; top: 0; width: 12px; height: 100%; background: #334155; }
-    .minimap-blip {
-      position: absolute;
-      top: 34px;
-      left: 52px;
-      width: 8px;
-      height: 8px;
-      background: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #38bdf8;
-    }
-
-    /* O'zbekiston Davlat Raqami */
-    .uz-license-plate {
-      background: #f8fafc;
-      color: #0f172a;
-      border: 2px solid #1e293b;
-      font-family: Impact, "Arial Black", sans-serif;
-      font-size: 12px;
-      letter-spacing: 1.5px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    .prava-hud-btn:active {
+      transform: scale(0.92);
     }
 
     /* Rul (Steering Wheel) */
-    .steering-container {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      z-index: 100;
-    }
-    #steering-wheel {
-      width: 145px;
-      height: 145px;
+    #wheel-dial {
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
-      background: radial-gradient(circle, #1e293b 35%, #090d16 75%, #15803d 95%);
-      border: 7px solid #334155;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.9);
+      background: radial-gradient(circle, #1e293b 40%, #090d16 80%, #15803d 95%);
+      border: 5px solid #334155;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.8);
       position: relative;
       display: flex;
       align-items: center;
@@ -185,402 +115,286 @@
       transition: transform 0.05s linear;
       cursor: grab;
     }
-    #steering-wheel::before {
+    #wheel-dial::before {
       content: '';
       position: absolute;
       top: 2px;
-      width: 16px;
-      height: 8px;
+      width: 14px;
+      height: 7px;
       background: #22c55e;
-      border-radius: 3px;
-    }
-    .wheel-center-badge {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #0f172a;
-      border: 2px solid #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+      border-radius: 2px;
     }
 
     /* Spidometr */
-    .speedo-dial {
-      width: 70px;
-      height: 70px;
+    .speed-dial {
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
       background: radial-gradient(circle, #020617 50%, #1e293b 100%);
-      border: 2.5px solid #475569;
+      border: 2px solid #475569;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
     }
-    .speedo-number { font-size: 20px; font-weight: 900; color: #fff; font-family: monospace; }
-    .speedo-label { font-size: 8px; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
 
-    /* Transmissiya va Pedallar (O'ng tomonda) */
-    .pedal-controls-container {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      display: flex;
-      align-items: flex-end;
-      gap: 12px;
-      z-index: 100;
-    }
-    /* Uzatmalar qutisi (R 1 2) */
-    .gear-shifter {
+    /* Pedallar & Uzatma */
+    .gear-box {
       background: rgba(15, 23, 42, 0.85);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 3px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      width: 42px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      gap: 3px;
+      width: 38px;
     }
-    .gear-btn {
-      padding: 6px 0;
-      border-radius: 9px;
+    .gear-item {
+      padding: 5px 0;
+      border-radius: 8px;
       color: #94a3b8;
       font-weight: 900;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
-    .gear-btn.active {
+    .gear-item.active {
       background: #16a34a;
-      color: #ffffff;
-      box-shadow: 0 0 12px #16a34a;
+      color: #fff;
     }
-    /* Pedallar */
-    .pedal-item {
-      width: 52px;
-      border-radius: 12px;
+    .pedal-box {
+      width: 48px;
+      border-radius: 10px;
       background: linear-gradient(180deg, #334155 0%, #0f172a 100%);
       border: 2px solid #64748b;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
-      padding: 8px 0;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      padding: 6px 0;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.5);
       cursor: pointer;
-      user-select: none;
     }
-    .pedal-item:active, .pedal-item.down {
+    .pedal-box:active, .pedal-box.is-down {
       background: linear-gradient(180deg, #15803d 0%, #052e16 100%);
       border-color: #22c55e;
-      transform: translateY(4px);
+      transform: translateY(3px);
     }
-    .pedal-brake { height: 90px; }
-    .pedal-gas { height: 105px; }
-    .pedal-stripe { width: 70%; height: 4px; background: #94a3b8; border-radius: 2px; }
+    .pedal-line { width: 65%; height: 3px; background: #94a3b8; border-radius: 2px; }
 
     /* ======================================================== */
-    /* 2. REAL VS CODE WEB IDE (CODEUSTOZ) SECTION             */
+    /* 2-EKRAN: CODEUSTOZ (VS CODE & JONLI NATIJA)              */
     /* ======================================================== */
-    #codeustoz-view {
-      display: flex;
-      width: 100%;
-      height: calc(100% - 60px);
-      background: #181818;
-      overflow: hidden;
-    }
-    /* Activity Bar (Far left) */
-    .vsc-activity {
-      width: 48px;
-      background: #333333;
-      display: flex;
+    #screen-codeustoz {
+      display: none;
       flex-direction: column;
-      align-items: center;
-      padding-top: 12px;
-      gap: 22px;
-      color: #858585;
-      border-right: 1px solid #252526;
-      z-index: 10;
+      background: #1e1e1e;
     }
-    .vsc-activity i { font-size: 19px; cursor: pointer; transition: color 0.15s; }
-    .vsc-activity i:hover, .vsc-activity i.active { color: #ffffff; }
-
-    /* Split Workspace */
-    .vsc-workspace {
-      display: flex;
-      flex: 1;
-      height: 100%;
-      width: calc(100% - 48px);
-    }
-
-    /* Left Half: Live Browser Output (White Window) */
-    .vsc-live-output {
-      flex: 1;
+    /* Yuqori Tab / Live Preview (Oq Brauzer) */
+    .vsc-top-preview {
+      height: 38%;
       background: #ffffff;
       color: #000000;
-      border-right: 2px solid #2d2d2d;
+      border-bottom: 2px solid #333333;
       display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 12px;
       overflow: auto;
-      position: relative;
     }
-    .vsc-browser-toolbar {
+    .vsc-preview-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 8px;
-      margin-bottom: 16px;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
     }
-    .vsc-browser-address {
+    .vsc-url-bar {
       background: #f1f5f9;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 6px;
       font-size: 11px;
       color: #64748b;
       font-family: monospace;
-      width: 65%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-    #browser-sandbox {
+    #vsc-render-box {
       flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      gap: 12px;
     }
 
-    /* Right Half: VS Code Dark Editor */
-    .vsc-editor-window {
-      flex: 1.1;
+    /* Pastki Qism: VS Code Tahrirlagich */
+    .vsc-bottom-editor {
+      height: 62%;
       background: #1e1e1e;
       display: flex;
       flex-direction: column;
-      height: 100%;
       font-family: "Consolas", "Courier New", monospace;
     }
-    .vsc-tabs-bar {
+    .vsc-file-tab {
       background: #252526;
-      height: 35px;
+      height: 32px;
       display: flex;
       align-items: center;
-    }
-    .vsc-tab-active {
-      background: #1e1e1e;
-      color: #ffffff;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 16px;
+      gap: 6px;
+      padding: 0 12px;
       font-size: 12px;
+      color: #fff;
       border-top: 2px solid #007acc;
-      border-right: 1px solid #252526;
+      width: fit-content;
     }
-    .vsc-code-body {
+    .vsc-text-wrapper {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
-    .vsc-gutter {
-      width: 42px;
-      background: #1e1e1e;
+    .vsc-numbers {
+      width: 32px;
       color: #858585;
       text-align: right;
-      padding: 10px 10px 10px 0;
-      font-size: 13px;
-      line-height: 22px;
+      padding: 8px 8px 8px 0;
+      font-size: 12px;
+      line-height: 20px;
       user-select: none;
       border-right: 1px solid #2d2d2d;
     }
-    #vsc-textarea {
+    #code-text-area {
       flex: 1;
       background: #1e1e1e;
       color: #9cdcfe;
       border: none;
       outline: none;
-      padding: 10px 12px;
-      font-family: "Consolas", "Courier New", monospace;
-      font-size: 13px;
-      line-height: 22px;
+      padding: 8px 10px;
+      font-family: "Consolas", monospace;
+      font-size: 12px;
+      line-height: 20px;
       resize: none;
       white-space: pre;
       overflow: auto;
     }
-    .vsc-statusbar {
-      height: 24px;
+    .vsc-status {
+      height: 22px;
       background: #007acc;
       color: #ffffff;
-      font-size: 11px;
+      font-size: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 0 10px;
     }
   </style>
 </head>
 <body>
 
   <!-- ======================================================== -->
-  <!-- VIEW 1: COBALT 3D AVTODROM (EXACT PRAVATEST EDU CLONE)  -->
+  <!-- 1. AVTODROM 3D EKRANI (PRAVATEST EDU)                     -->
   <!-- ======================================================== -->
-  <main id="avtodrom-view" class="view-container active">
-    
-    <!-- Three.js Real 3D Canvas -->
-    <canvas id="three-viewport"></canvas>
+  <section id="screen-avtodrom" class="app-screen is-active">
+    <canvas id="three-canvas"></canvas>
 
-    <!-- Top Left HUD (PravaTest EDU Menu, Home, Imtihon) -->
-    <div class="top-left-hud">
-      <button class="hud-glass-btn" style="width: 38px; height: 38px;" onclick="switchAppTab('codeustoz')">
-        <i class="fa-solid fa-bars text-sm"></i>
+    <!-- Yuqori Chap HUD -->
+    <div style="position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 6px; z-index: 10;">
+      <button class="prava-hud-btn" style="width: 34px; height: 34px;" onclick="switchScreen('codeustoz')">
+        <i class="fa-solid fa-bars text-xs"></i>
       </button>
-      <button class="hud-glass-btn" style="width: 38px; height: 38px;" onclick="resetCobaltPosition()">
-        <i class="fa-solid fa-house text-sm"></i>
+      <button class="prava-hud-btn" style="width: 34px; height: 34px;" onclick="resetCobaltPos()">
+        <i class="fa-solid fa-house text-xs"></i>
       </button>
-      <div class="badge-imtihon">
-        <i class="fa-solid fa-clipboard-check text-sm"></i>
+      <div style="background: #2563eb; color: #fff; padding: 5px 10px; border-radius: 10px; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px;">
+        <i class="fa-solid fa-clipboard-check text-xs"></i>
         <span>Imtihon</span>
       </div>
     </div>
 
-    <!-- Cobalt Kuzov Rangi & Davlat Raqami (AIAVTOROBOT) -->
-    <div style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; z-index: 100;">
-      <div class="hud-glass-btn" style="padding: 3px 6px; gap: 6px;">
-        <span style="font-size: 10px; font-weight: 700;">RANG:</span>
-        <button onclick="setCobalt3DColor(0xffffff)" id="colBtnWhite" style="width: 22px; height: 22px; border-radius: 6px; background: #fff; border: 2px solid #22c55e; cursor: pointer;"></button>
-        <button onclick="setCobalt3DColor(0x111827)" id="colBtnBlack" style="width: 22px; height: 22px; border-radius: 6px; background: #000; border: 1.5px solid #475569; cursor: pointer;"></button>
+    <!-- Cobalt Rangi va Raqami -->
+    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; z-index: 10;">
+      <div class="prava-hud-btn" style="padding: 2px 6px; gap: 5px;">
+        <button onclick="setCobaltColor3D(0xffffff)" id="btnColWhite" style="width: 18px; height: 18px; border-radius: 4px; background: #fff; border: 2px solid #22c55e; cursor: pointer;"></button>
+        <button onclick="setCobaltColor3D(0x111827)" id="btnColBlack" style="width: 18px; height: 18px; border-radius: 4px; background: #000; border: 1px solid #64748b; cursor: pointer;"></button>
       </div>
-      <div class="uz-license-plate">
-        <span style="color: #2563eb; font-weight: 900; margin-right: 4px; font-size: 10px;">01</span>
-        <span>AIAVTOROBOT</span>
+      <div style="background: #fff; color: #000; border: 1.5px solid #000; font-family: Impact; font-size: 10px; letter-spacing: 1px; padding: 1px 5px; border-radius: 3px;">
+        <span style="color: blue; font-weight: 900;">01</span> AIAVTOROBOT
       </div>
     </div>
 
-    <!-- Top Right HUD (MiniMap, Camera toggle, Restart) -->
-    <div class="top-right-hud">
-      <div class="prava-minimap">
-        <div class="minimap-road-h"></div>
-        <div class="minimap-road-v"></div>
-        <div class="minimap-blip" id="mapCarBlip"></div>
+    <!-- Yuqori O'ng HUD (Minimap & Tugmalar) -->
+    <div style="position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; z-index: 10;">
+      <div style="width: 90px; height: 55px; background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 25px; left: 0; width: 100%; height: 8px; background: #334155;"></div>
+        <div style="position: absolute; left: 42px; top: 0; width: 8px; height: 100%; background: #334155;"></div>
+        <div id="miniBlip" style="position: absolute; top: 26px; left: 43px; width: 6px; height: 6px; background: #38bdf8; border-radius: 50%;"></div>
       </div>
-      <div style="display: flex; gap: 6px;">
-        <button class="hud-glass-btn" style="width: 36px; height: 36px;" onclick="toggleCamView()">
-          <i class="fa-solid fa-camera text-xs"></i>
-        </button>
-        <button class="hud-glass-btn" style="width: 36px; height: 36px; color: #f43f5e;" onclick="emergencyBrake()">
-          <i class="fa-solid fa-triangle-exclamation text-xs"></i>
-        </button>
-        <button class="hud-glass-btn" style="width: 36px; height: 36px;" onclick="resetCobaltPosition()">
-          <i class="fa-solid fa-rotate-left text-xs"></i>
-        </button>
+      <div style="display: flex; gap: 4px;">
+        <button class="prava-hud-btn" style="width: 30px; height: 30px;" onclick="toggleCam()"><i class="fa-solid fa-camera text-[10px]"></i></button>
+        <button class="prava-hud-btn" style="width: 30px; height: 30px; color: #f43f5e;" onclick="stopCarInstantly()"><i class="fa-solid fa-triangle-exclamation text-[10px]"></i></button>
+        <button class="prava-hud-btn" style="width: 30px; height: 30px;" onclick="resetCobaltPos()"><i class="fa-solid fa-rotate-left text-[10px]"></i></button>
       </div>
     </div>
 
-    <!-- Turn signal indicators -->
-    <div style="position: absolute; top: 62px; left: 12px; display: flex; gap: 6px; z-index: 100;">
-      <button class="hud-glass-btn" style="width: 38px; height: 32px;"><i class="fa-solid fa-arrow-left text-xs"></i></button>
-      <button class="hud-glass-btn" style="width: 38px; height: 32px; color: #ef4444;"><i class="fa-solid fa-triangle-exclamation text-xs"></i></button>
-      <button class="hud-glass-btn" style="width: 38px; height: 32px;"><i class="fa-solid fa-arrow-right text-xs"></i></button>
-    </div>
-
-    <!-- Bottom Left HUD (Rul & Spidometr) -->
-    <div class="steering-container">
-      <div id="steering-wheel">
-        <div class="wheel-center-badge">
-          <i class="fa-solid fa-car-side" style="color: #22c55e; font-size: 18px;"></i>
+    <!-- Pastki Chap: Rul & Spidometr -->
+    <div style="position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 10px; z-index: 10;">
+      <div id="wheel-dial">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #0f172a; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: center;">
+          <i class="fa-solid fa-car-side" style="color: #22c55e; font-size: 15px;"></i>
         </div>
       </div>
-      <div class="speedo-dial">
-        <span class="speedo-number" id="speedDisplay">0</span>
-        <span class="speedo-label">km/soat</span>
+      <div class="speed-dial">
+        <span id="speedNum" style="font-size: 18px; font-weight: 900; color: #fff; font-family: monospace;">0</span>
+        <span style="font-size: 7px; color: #94a3b8; font-weight: 700;">KM/SOAT</span>
       </div>
     </div>
 
-    <!-- Bottom Right HUD (Uzatma R 1 2 va Pedallar) -->
-    <div class="pedal-controls-container">
-      <!-- Transmissiya -->
-      <div class="gear-shifter">
-        <div class="gear-btn" id="shifterR" onclick="selectGear('R')">R</div>
-        <div class="gear-btn active" id="shifter1" onclick="selectGear('1')">1</div>
-        <div class="gear-btn" id="shifter2" onclick="selectGear('2')">2</div>
+    <!-- Pastki O'ng: Uzatma va Pedallar -->
+    <div style="position: absolute; bottom: 12px; right: 12px; display: flex; align-items: flex-end; gap: 8px; z-index: 10;">
+      <div class="gear-box">
+        <div class="gear-item" id="gR" onclick="chooseGear('R')">R</div>
+        <div class="gear-item active" id="g1" onclick="chooseGear('1')">1</div>
+        <div class="gear-item" id="g2" onclick="chooseGear('2')">2</div>
       </div>
-      <!-- Tormoz Pedali -->
-      <div class="pedal-item pedal-brake" id="pedalStop">
-        <div class="pedal-stripe"></div>
-        <div class="pedal-stripe"></div>
-        <div class="pedal-stripe"></div>
-        <span style="font-size: 9px; font-weight: 800; color: #cbd5e1;">STOP</span>
+      <div class="pedal-box" id="pedalBrake" style="height: 75px;">
+        <div class="pedal-line"></div>
+        <div class="pedal-line"></div>
+        <span style="font-size: 8px; font-weight: 800; color: #cbd5e1;">STOP</span>
       </div>
-      <!-- Gaz Pedali -->
-      <div class="pedal-item pedal-gas" id="pedalDrive">
-        <div class="pedal-stripe"></div>
-        <div class="pedal-stripe"></div>
-        <div class="pedal-stripe"></div>
-        <div class="pedal-stripe"></div>
-        <span style="font-size: 10px; font-weight: 900; color: #4ade80;">GAZ</span>
+      <div class="pedal-box" id="pedalGas" style="height: 90px;">
+        <div class="pedal-line"></div>
+        <div class="pedal-line"></div>
+        <div class="pedal-line"></div>
+        <span style="font-size: 9px; font-weight: 900; color: #4ade80;">GAZ</span>
       </div>
     </div>
-
-  </main>
+  </section>
 
   <!-- ======================================================== -->
-  <!-- VIEW 2: CODEUSTOZ (EXACT VS CODE + LIVE BROWSER CLONE)  -->
+  <!-- 2. CODEUSTOZ EKRANI (VS CODE & JONLI BROWSER)            -->
   <!-- ======================================================== -->
-  <main id="codeustoz-view" class="view-container">
+  <section id="screen-codeustoz" class="app-screen">
     
-    <!-- Left Activity Bar -->
-    <div class="vsc-activity">
-      <i class="fa-regular fa-file active" title="Explorer"></i>
-      <i class="fa-solid fa-magnifying-glass" title="Search"></i>
-      <i class="fa-solid fa-code-branch" title="Source Control"></i>
-      <i class="fa-solid fa-play" style="color: #4ade80;" onclick="executeCodeLive()" title="Run Code"></i>
-      <i class="fa-solid fa-cubes" title="Extensions"></i>
-    </div>
-
-    <!-- Split Workspace -->
-    <div class="vsc-workspace">
-      
-      <!-- Left Screen: Haqiqiy Oq Brauzer Natijasi (Aynan skrinshotdagidek) -->
-      <div class="vsc-live-output">
-        <div class="vsc-browser-toolbar">
-          <div class="vsc-browser-address">http://127.0.0.1:5500/index.html</div>
-          <button onclick="executeCodeLive()" style="background: #0284c7; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer;">
-            <i class="fa-solid fa-rotate-right mr-1"></i> Run
-          </button>
-        </div>
-
-        <!-- BU YERDA KODINGIZNING HAQIQIY ELEMENTI CHIQADI -->
-        <div id="browser-sandbox">
-          <!-- Standart: salom tugmasi -->
-          <button style="padding: 6px 18px; font-size: 16px; border: 2px solid #333; border-radius: 6px; background: #efefef; cursor: pointer;">salom</button>
-        </div>
+    <!-- Yuqori qism: Oq Brauzer Natijasi (Aynan skrinshotdagidek) -->
+    <div class="vsc-top-preview">
+      <div class="vsc-preview-header">
+        <span class="vsc-url-bar">http://127.0.0.1:5500/index.html</span>
+        <button onclick="updateLiveSandbox()" style="background: #0284c7; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer;">
+          Run
+        </button>
       </div>
 
-      <!-- Right Screen: VS Code Editor -->
-      <div class="vsc-editor-window">
-        <!-- Tab Bar -->
-        <div class="vsc-tabs-bar">
-          <div class="vsc-tab-active">
-            <i class="fa-brands fa-html5" style="color: #e34c26;"></i>
-            <span>index.html</span>
-            <span style="color: #858585; margin-left: 6px;">×</span>
-          </div>
-        </div>
+      <!-- HAQIQIY JONLI ELEMENT CHIQADIGAN JOY -->
+      <div id="vsc-render-box">
+        <button style="padding: 6px 18px; font-size: 16px; border: 2px solid #555; border-radius: 6px; background: #efefef; cursor: pointer;">salom</button>
+      </div>
+    </div>
 
-        <!-- Code Body -->
-        <div class="vsc-code-body">
-          <div class="vsc-gutter">
-            1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11
-          </div>
-          <textarea id="vsc-textarea" spellcheck="false" oninput="executeCodeLive()"><!DOCTYPE html>
+    <!-- Pastki qism: VS Code Tahrirlagichi -->
+    <div class="vsc-bottom-editor">
+      <div class="vsc-file-tab">
+        <i class="fa-brands fa-html5" style="color: #e34c26;"></i>
+        <span>index.html</span>
+      </div>
+      <div class="vsc-text-wrapper">
+        <div class="vsc-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+        <textarea id="code-text-area" spellcheck="false" oninput="updateLiveSandbox()"><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -591,73 +405,79 @@
 
 </body>
 </html></textarea>
-        </div>
-
-        <!-- Status Bar -->
-        <div class="vsc-statusbar">
-          <span><i class="fa-solid fa-code-branch mr-1"></i> main*</span>
-          <span>UTF-8 &bull; HTML &bull; Live Server</span>
-        </div>
       </div>
-
+      <div class="vsc-status">
+        <span>main* &bull; HTML</span>
+        <span>Live Server: 5500</span>
+      </div>
     </div>
 
-  </main>
+  </section>
 
   <!-- ======================================================== -->
-  <!-- BOTTOM TAB SWITCHER                                      -->
+  <!-- PASTKI TAB BAR                                           -->
   <!-- ======================================================== -->
-  <nav id="tab-bar">
-    <button class="tab-btn active" id="tabNavAvto" onclick="switchAppTab('avtodrom')">
+  <nav id="bottom-nav">
+    <button class="nav-btn active" id="btnNavAvto" onclick="switchScreen('avtodrom')">
       <i class="fa-solid fa-car"></i>
       <span>Avtodrom 3D</span>
     </button>
-    <button class="tab-btn" id="tabNavCode" onclick="switchAppTab('codeustoz')">
+    <button class="nav-btn" id="btnNavCode" onclick="switchScreen('codeustoz')">
       <i class="fa-solid fa-code"></i>
       <span>CodeUstoz</span>
     </button>
   </nav>
 
   <!-- ======================================================== -->
-  <!-- REAL JAVASCRIPT ENGINES                                  -->
+  <!-- JAVASCRIPT LOGIKA                                        -->
   <!-- ======================================================== -->
   <script>
-    // Tab navigatsiyasi
-    function switchAppTab(tab) {
-      document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    // Tablarni 100% to'g'ri almashtirish (bir-biriga xalaqit bermasdan)
+    function switchScreen(name) {
+      const scrAvto = document.getElementById('screen-avtodrom');
+      const scrCode = document.getElementById('screen-codeustoz');
+      const navAvto = document.getElementById('btnNavAvto');
+      const navCode = document.getElementById('btnNavCode');
 
-      if (tab === 'avtodrom') {
-        document.getElementById('avtodrom-view').classList.add('active');
-        document.getElementById('tabNavAvto').classList.add('active');
-        if (renderer && camera) onWindowResize();
+      if (name === 'avtodrom') {
+        scrAvto.classList.add('is-active');
+        scrCode.classList.remove('is-active');
+        scrCode.style.display = 'none';
+
+        navAvto.classList.add('active');
+        navCode.classList.remove('active');
+
+        if (renderer && camera) onResize();
       } else {
-        document.getElementById('codeustoz-view').classList.add('active');
-        document.getElementById('tabNavCode').classList.add('active');
-        executeCodeLive();
+        scrAvto.classList.remove('is-active');
+        scrCode.classList.add('is-active');
+        scrCode.style.display = 'flex';
+
+        navCode.classList.add('active');
+        navAvto.classList.remove('active');
+
+        updateLiveSandbox();
       }
     }
 
     // ========================================================
-    // 1. VS CODE HAQIQIY JONLI KOMPILYATOR (LIVE RUNNER)
+    // CODEUSTOZ LIVE RUNNER
     // ========================================================
-    function executeCodeLive() {
-      const code = document.getElementById('vsc-textarea').value;
-      const sandbox = document.getElementById('browser-sandbox');
+    function updateLiveSandbox() {
+      const val = document.getElementById('code-text-area').value;
+      const box = document.getElementById('vsc-render-box');
 
-      // <body> ichidagi kodni ajratib olish (yoki to'liq HTML)
-      let rendered = code;
-      const match = code.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+      let parsed = val;
+      const match = val.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
       if (match && match[1]) {
-        rendered = match[1];
+        parsed = match[1];
       }
 
-      // To'g'ridan-to'g'ri haqiqiy DOM ga chiqarish
-      sandbox.innerHTML = rendered;
+      box.innerHTML = parsed;
 
-      // Agar button bo'lsa va maxsus styli bo'lmasa skrinshotdagidek stil berish
-      const buttons = sandbox.querySelectorAll('button');
-      buttons.forEach(b => {
+      // Agar oddiy button bo'lsa rasmdagidek ko'rinish berish
+      const btns = box.querySelectorAll('button');
+      btns.forEach(b => {
         if (!b.getAttribute('style')) {
           b.style.padding = "6px 18px";
           b.style.fontSize = "16px";
@@ -670,288 +490,248 @@
     }
 
     // ========================================================
-    // 2. REAL THREE.JS 3D AVTODROM (PRAVATEST EDU KANVAS)
+    // THREE.JS 3D AVTODROM ENGINE
     // ========================================================
-    let scene, camera, renderer, cobaltGroup, cobaltBodyMat;
-    let carSpeed = 0;
-    let carGear = '1';
-    let steerDeg = 0;
-    let isGasOn = false;
-    let isBrakeOn = false;
-    let camFollow = true;
+    let scene, camera, renderer, cobaltModel, cobaltMat;
+    let speed = 0;
+    let gear = '1';
+    let steerAngle = 0;
+    let isGas = false;
+    let isBrake = false;
+    let isFollowCam = true;
 
-    function initPravaTest3D() {
-      const container = document.getElementById('avtodrom-view');
-      const canvas = document.getElementById('three-viewport');
+    function init3D() {
+      const container = document.getElementById('screen-avtodrom');
+      const canvas = document.getElementById('three-canvas');
 
-      // Scene & Sky
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0x87CEEB);
-      scene.fog = new THREE.FogExp2(0x87CEEB, 0.008);
+      scene.fog = new THREE.FogExp2(0x87CEEB, 0.01);
 
-      camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 800);
+      camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 600);
 
       renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.shadowMap.enabled = true;
 
-      // Sunlight
-      const ambLight = new THREE.AmbientLight(0xffffff, 0.75);
+      // Yoritish
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
       scene.add(ambLight);
 
-      const sun = new THREE.DirectionalLight(0xffffff, 0.85);
-      sun.position.set(60, 120, 60);
-      sun.castShadow = true;
-      scene.add(sun);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      dirLight.position.set(50, 100, 50);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
 
-      // 1. Asfalt maydon (Avtodrom zamin)
-      const groundGeo = new THREE.PlaneGeometry(500, 500);
-      const groundMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.85 });
-      const ground = new THREE.Mesh(groundGeo, groundMat);
+      // Asfalt zamini
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(400, 400),
+        new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.9 })
+      );
       ground.rotation.x = -Math.PI / 2;
       ground.receiveShadow = true;
       scene.add(ground);
 
-      // 2. Real Avtodrom Orolchalari (Sariq-oq bordyurlar & Yashil gazon)
-      buildPravaTestTrack();
+      // Avtodrom Orolchalari (Bordyur va gazon)
+      buildTrack();
 
-      // 3. Real Chevrolet Cobalt 3D Modeli
-      buildCobalt3D();
+      // Chevrolet Cobalt
+      buildCobalt();
 
-      animate3D();
+      loop();
     }
 
-    function buildPravaTestTrack() {
-      // Yashil orolchalar (Bordyur bilan)
-      function createIsland(x, z, w, d) {
-        const group = new THREE.Group();
-        // Gazon
-        const grassGeo = new THREE.BoxGeometry(w, 0.35, d);
-        const grassMat = new THREE.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.9 });
-        const grass = new THREE.Mesh(grassGeo, grassMat);
-        grass.position.y = 0.17;
-        group.add(grass);
+    function buildTrack() {
+      function addIsland(x, z, w, d) {
+        const g = new THREE.Group();
+        const grass = new THREE.Mesh(
+          new THREE.BoxGeometry(w, 0.3, d),
+          new THREE.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.8 })
+        );
+        grass.position.y = 0.15;
+        g.add(grass);
 
-        // Sariq-qora / Sariq-oq bordyur
-        const curbGeo = new THREE.BoxGeometry(w + 0.6, 0.25, d + 0.6);
-        const curbMat = new THREE.MeshStandardMaterial({ color: 0xeab308 });
-        const curb = new THREE.Mesh(curbGeo, curbMat);
-        curb.position.y = 0.12;
-        group.add(curb);
+        const curb = new THREE.Mesh(
+          new THREE.BoxGeometry(w + 0.5, 0.2, d + 0.5),
+          new THREE.MeshStandardMaterial({ color: 0xeab308 })
+        );
+        curb.position.y = 0.1;
+        g.add(curb);
 
-        group.position.set(x, 0, z);
-        scene.add(group);
+        g.position.set(x, 0, z);
+        scene.add(g);
       }
 
-      createIsland(-22, 15, 24, 45);
-      createIsland(22, 15, 24, 45);
-      createIsland(-22, -45, 24, 45);
-      createIsland(22, -45, 24, 45);
+      addIsland(-20, 15, 20, 40);
+      addIsland(20, 15, 20, 40);
+      addIsland(-20, -40, 20, 40);
+      addIsland(20, -40, 20, 40);
 
-      // Piyodalar o'tish joyi (Zebra oq chiziqlari)
+      // Zebra
       const zebraMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      for (let i = -8; i <= 8; i += 2.2) {
-        const line = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 5.5), zebraMat);
-        line.rotation.x = -Math.PI / 2;
-        line.position.set(i, 0.05, 5);
-        scene.add(line);
+      for (let i = -7; i <= 7; i += 2) {
+        const zLine = new THREE.Mesh(new THREE.PlaneGeometry(1, 5), zebraMat);
+        zLine.rotation.x = -Math.PI / 2;
+        zLine.position.set(i, 0.05, 5);
+        scene.add(zLine);
       }
-
-      // Chorraha yo'l chiziqlari (Oq burilish strelkalari)
-      const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const arrow1 = new THREE.Mesh(new THREE.PlaneGeometry(1, 4), arrowMat);
-      arrow1.rotation.x = -Math.PI / 2;
-      arrow1.position.set(4, 0.05, 14);
-      scene.add(arrow1);
     }
 
-    function buildCobalt3D() {
-      cobaltGroup = new THREE.Group();
+    function buildCobalt() {
+      cobaltModel = new THREE.Group();
+      cobaltMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.3 });
 
-      // Kuzov (Chevrolet Cobalt sedani)
-      cobaltBodyMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.25 });
+      // Kuzov
+      const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.7, 4.4), cobaltMat);
+      body.position.y = 0.6;
+      body.castShadow = true;
+      cobaltModel.add(body);
 
-      // Pastki korpus
-      const bodyBottom = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.75, 4.6), cobaltBodyMat);
-      bodyBottom.position.y = 0.65;
-      bodyBottom.castShadow = true;
-      cobaltGroup.add(bodyBottom);
+      // Kabina
+      const cabin = new THREE.Mesh(
+        new THREE.BoxGeometry(1.9, 0.65, 2.3),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1 })
+      );
+      cabin.position.set(0, 1.25, -0.2);
+      cobaltModel.add(cabin);
 
-      // Kabina (Tom va oynalar)
-      const cabinMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1 });
-      const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.68, 2.4), cabinMat);
-      cabin.position.set(0, 1.3, -0.2);
-      cobaltGroup.add(cabin);
+      // Orqa faralar
+      const tl = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.18, 0.1), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+      tl.position.set(0.8, 0.7, -2.21);
+      cobaltModel.add(tl);
 
-      // Cobalt orqa faralari (Qizil LED)
-      const tailLightMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
-      const tlLeft = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.1), tailLightMat);
-      tlLeft.position.set(0.85, 0.75, -2.31);
-      cobaltGroup.add(tlLeft);
+      const tr = tl.clone();
+      tr.position.set(-0.8, 0.7, -2.21);
+      cobaltModel.add(tr);
 
-      const tlRight = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.1), tailLightMat);
-      tlRight.position.set(-0.85, 0.75, -2.31);
-      cobaltGroup.add(tlRight);
+      // G'ildiraklar
+      const wGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.3, 16);
+      wGeo.rotateZ(Math.PI / 2);
+      const wMat = new THREE.MeshStandardMaterial({ color: 0x111827 });
 
-      // Old faralar
-      const headLightMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
-      const hlLeft = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.1), headLightMat);
-      hlLeft.position.set(0.85, 0.75, 2.31);
-      cobaltGroup.add(hlLeft);
+      const w1 = new THREE.Mesh(wGeo, wMat); w1.position.set(1.15, 0.4, 1.4); cobaltModel.add(w1);
+      const w2 = new THREE.Mesh(wGeo, wMat); w2.position.set(-1.15, 0.4, 1.4); cobaltModel.add(w2);
+      const w3 = new THREE.Mesh(wGeo, wMat); w3.position.set(1.15, 0.4, -1.4); cobaltModel.add(w3);
+      const w4 = new THREE.Mesh(wGeo, wMat); w4.position.set(-1.15, 0.4, -1.4); cobaltModel.add(w4);
 
-      const hlRight = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.1), headLightMat);
-      hlRight.position.set(-0.85, 0.75, 2.31);
-      cobaltGroup.add(hlRight);
-
-      // G'ildiraklar (4 ta)
-      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111827 });
-      const wheelGeo = new THREE.CylinderGeometry(0.42, 0.42, 0.32, 16);
-      wheelGeo.rotateZ(Math.PI / 2);
-
-      const wheelsPos = [
-        [1.2, 0.42, 1.45], [-1.2, 0.42, 1.45],
-        [1.2, 0.42, -1.45], [-1.2, 0.42, -1.45]
-      ];
-      wheelsPos.forEach(p => {
-        const w = new THREE.Mesh(wheelGeo, wheelMat);
-        w.position.set(p[0], p[1], p[2]);
-        cobaltGroup.add(w);
-      });
-
-      cobaltGroup.position.set(0, 0, -4);
-      scene.add(cobaltGroup);
+      cobaltModel.position.set(0, 0, -4);
+      scene.add(cobaltModel);
     }
 
-    // Rang tanlash
-    function setCobalt3DColor(hex) {
-      if (cobaltBodyMat) cobaltBodyMat.color.setHex(hex);
+    function setCobaltColor3D(hex) {
+      if (cobaltMat) cobaltMat.color.setHex(hex);
       if (hex === 0xffffff) {
-        document.getElementById('colBtnWhite').style.border = "2px solid #22c55e";
-        document.getElementById('colBtnBlack').style.border = "1.5px solid #475569";
+        document.getElementById('btnColWhite').style.border = "2px solid #22c55e";
+        document.getElementById('btnColBlack').style.border = "1px solid #64748b";
       } else {
-        document.getElementById('colBtnBlack').style.border = "2px solid #22c55e";
-        document.getElementById('colBtnWhite').style.border = "1.5px solid #475569";
+        document.getElementById('btnColBlack').style.border = "2px solid #22c55e";
+        document.getElementById('btnColWhite').style.border = "1px solid #64748b";
       }
     }
 
-    // Uzatmalar
-    function selectGear(g) {
-      carGear = g;
-      ['R', '1', '2'].forEach(item => document.getElementById('shifter' + item).classList.remove('active'));
-      document.getElementById('shifter' + g).classList.add('active');
+    function chooseGear(g) {
+      gear = g;
+      ['R', '1', '2'].forEach(i => document.getElementById('g' + i).classList.remove('active'));
+      document.getElementById('g' + g).classList.add('active');
     }
 
-    // Rul aylantirish (Sensorli yoki sichqoncha)
-    const wheel = document.getElementById('steering-wheel');
-    let isTouchingWheel = false;
+    // Rul
+    const wheel = document.getElementById('wheel-dial');
+    let isSteering = false;
 
-    function onWheelMove(e) {
-      if (!isTouchingWheel) return;
+    function moveWheel(e) {
+      if (!isSteering) return;
       const rect = wheel.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const x = e.touches ? e.touches[0].clientX : e.clientX;
       const y = e.touches ? e.touches[0].clientY : e.clientY;
-      const angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
-      steerDeg = Math.max(-95, Math.min(95, angle));
-      wheel.style.transform = `rotate(${steerDeg}deg)`;
+      const a = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
+      steerAngle = Math.max(-90, Math.min(90, a));
+      wheel.style.transform = `rotate(${steerAngle}deg)`;
     }
 
-    wheel.addEventListener('touchstart', () => isTouchingWheel = true);
-    wheel.addEventListener('touchend', () => { isTouchingWheel = false; steerDeg = 0; wheel.style.transform = 'rotate(0deg)'; });
-    wheel.addEventListener('touchmove', onWheelMove);
-
-    wheel.addEventListener('mousedown', () => isTouchingWheel = true);
-    window.addEventListener('mouseup', () => { isTouchingWheel = false; steerDeg = 0; wheel.style.transform = 'rotate(0deg)'; });
-    window.addEventListener('mousemove', onWheelMove);
+    wheel.addEventListener('touchstart', () => isSteering = true);
+    wheel.addEventListener('touchend', () => { isSteering = false; steerAngle = 0; wheel.style.transform = 'rotate(0deg)'; });
+    wheel.addEventListener('touchmove', moveWheel);
+    wheel.addEventListener('mousedown', () => isSteering = true);
+    window.addEventListener('mouseup', () => { isSteering = false; steerAngle = 0; wheel.style.transform = 'rotate(0deg)'; });
+    window.addEventListener('mousemove', moveWheel);
 
     // Pedallar
-    const gasBtn = document.getElementById('pedalDrive');
-    const brakeBtn = document.getElementById('pedalStop');
+    const gas = document.getElementById('pedalGas');
+    const brake = document.getElementById('pedalBrake');
 
-    gasBtn.addEventListener('touchstart', (e) => { e.preventDefault(); isGasOn = true; gasBtn.classList.add('down'); });
-    gasBtn.addEventListener('touchend', () => { isGasOn = false; gasBtn.classList.remove('down'); });
-    brakeBtn.addEventListener('touchstart', (e) => { e.preventDefault(); isBrakeOn = true; brakeBtn.classList.add('down'); });
-    brakeBtn.addEventListener('touchend', () => { isBrakeOn = false; brakeBtn.classList.remove('down'); });
+    gas.addEventListener('touchstart', (e) => { e.preventDefault(); isGas = true; gas.classList.add('is-down'); });
+    gas.addEventListener('touchend', () => { isGas = false; gas.classList.remove('is-down'); });
+    brake.addEventListener('touchstart', (e) => { e.preventDefault(); isBrake = true; brake.classList.add('is-down'); });
+    brake.addEventListener('touchend', () => { isBrake = false; brake.classList.remove('is-down'); });
 
-    gasBtn.addEventListener('mousedown', () => { isGasOn = true; gasBtn.classList.add('down'); });
-    gasBtn.addEventListener('mouseup', () => { isGasOn = false; gasBtn.classList.remove('down'); });
-    brakeBtn.addEventListener('mousedown', () => { isBrakeOn = true; brakeBtn.classList.add('down'); });
-    brakeBtn.addEventListener('mouseup', () => { isBrakeOn = false; brakeBtn.classList.remove('down'); });
+    gas.addEventListener('mousedown', () => { isGas = true; gas.classList.add('is-down'); });
+    gas.addEventListener('mouseup', () => { isGas = false; gas.classList.remove('is-down'); });
+    brake.addEventListener('mousedown', () => { isBrake = true; brake.classList.add('is-down'); });
+    brake.addEventListener('mouseup', () => { isBrake = false; brake.classList.remove('is-down'); });
 
-    function resetCobaltPosition() {
-      cobaltGroup.position.set(0, 0, -4);
-      cobaltGroup.rotation.set(0, 0, 0);
-      carSpeed = 0;
+    function resetCobaltPos() {
+      cobaltModel.position.set(0, 0, -4);
+      cobaltModel.rotation.set(0, 0, 0);
+      speed = 0;
     }
 
-    function emergencyBrake() {
-      carSpeed = 0;
-    }
+    function stopCarInstantly() { speed = 0; }
+    function toggleCam() { isFollowCam = !isFollowCam; }
 
-    function toggleCamView() {
-      camFollow = !camFollow;
-    }
+    function loop() {
+      requestAnimationFrame(loop);
 
-    // 3D Animatsiya sikli
-    function animate3D() {
-      requestAnimationFrame(animate3D);
+      const maxSpd = (gear === '2') ? 0.6 : (gear === '1') ? 0.35 : -0.25;
 
-      const maxSpeed = (carGear === '2') ? 0.65 : (carGear === '1') ? 0.38 : -0.28;
-
-      if (isGasOn) {
-        if (carGear === 'R') carSpeed = Math.max(maxSpeed, carSpeed - 0.012);
-        else carSpeed = Math.min(maxSpeed, carSpeed + 0.012);
-      } else if (isBrakeOn) {
-        carSpeed *= 0.82;
+      if (isGas) {
+        if (gear === 'R') speed = Math.max(maxSpd, speed - 0.01);
+        else speed = Math.min(maxSpd, speed + 0.01);
+      } else if (isBrake) {
+        speed *= 0.82;
       } else {
-        carSpeed *= 0.96;
+        speed *= 0.96;
       }
 
-      if (Math.abs(carSpeed) > 0.005) {
-        cobaltGroup.rotation.y -= (steerDeg / 95) * 0.035 * (carSpeed > 0 ? 1 : -1);
+      if (Math.abs(speed) > 0.005) {
+        cobaltModel.rotation.y -= (steerAngle / 90) * 0.035 * (speed > 0 ? 1 : -1);
       }
 
-      cobaltGroup.translateZ(carSpeed);
+      cobaltModel.translateZ(speed);
 
-      // Spidometr yangilash
-      document.getElementById('speedDisplay').textContent = Math.round(Math.abs(carSpeed) * 85);
+      document.getElementById('speedNum').textContent = Math.round(Math.abs(speed) * 85);
 
-      // Minimap nuqtasini yangilash
-      const blip = document.getElementById('mapCarBlip');
+      const blip = document.getElementById('miniBlip');
       if (blip) {
-        blip.style.left = (52 + cobaltGroup.position.x * 0.6) + 'px';
-        blip.style.top = (34 - cobaltGroup.position.z * 0.4) + 'px';
+        blip.style.left = (43 + cobaltModel.position.x * 0.5) + 'px';
+        blip.style.top = (26 - cobaltModel.position.z * 0.4) + 'px';
       }
 
-      // Kamera (PravaTest EDU skrinshotidagi orqa burchak)
-      if (camFollow) {
-        const camPos = new THREE.Vector3(0, 4.2, -7.5);
-        camPos.applyMatrix4(cobaltGroup.matrixWorld);
-        camera.position.lerp(camPos, 0.12);
-        camera.lookAt(cobaltGroup.position.x, cobaltGroup.position.y + 1.2, cobaltGroup.position.z + 5);
-      } else {
-        camera.position.set(cobaltGroup.position.x - 0.4, cobaltGroup.position.y + 1.3, cobaltGroup.position.z);
-        camera.lookAt(cobaltGroup.position.x, cobaltGroup.position.y + 1.3, cobaltGroup.position.z + 6);
+      if (isFollowCam) {
+        const offset = new THREE.Vector3(0, 4, -7);
+        offset.applyMatrix4(cobaltModel.matrixWorld);
+        camera.position.lerp(offset, 0.12);
+        camera.lookAt(cobaltModel.position.x, cobaltModel.position.y + 1, cobaltModel.position.z + 5);
       }
 
       renderer.render(scene, camera);
     }
 
-    function onWindowResize() {
-      const container = document.getElementById('avtodrom-view');
-      if (camera && renderer && container) {
-        camera.aspect = container.clientWidth / container.clientHeight;
+    function onResize() {
+      const c = document.getElementById('screen-avtodrom');
+      if (camera && renderer && c) {
+        camera.aspect = c.clientWidth / c.clientHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setSize(c.clientWidth, c.clientHeight);
       }
     }
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', onResize);
 
-    // Initializer
     window.addEventListener('load', () => {
-      initPravaTest3D();
-      executeCodeLive();
+      init3D();
+      updateLiveSandbox();
     });
   </script>
 </body>
