@@ -34,26 +34,19 @@
     }
     .liquid-btn:active {
       transform: scale(0.97);
-      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.2);
-    }
-    .neon-text-cyan {
-      text-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
-    }
-    .neon-text-amber {
-      text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
     }
     .tab-pane {
       display: none;
     }
     .tab-pane.active {
       display: block;
-      animation: tabFadeIn 0.25s ease-out;
+      animation: tabFadeIn 0.2s ease-out;
     }
     @keyframes tabFadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Number Plate */
+    /* O'zbekiston Davlat Raqami */
     .license-plate {
       background: #f8fafc;
       color: #0f172a;
@@ -66,20 +59,27 @@
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
-    /* Canvas styling */
     #autodromeCanvas {
-      background: #334155;
+      background: #1e293b;
       touch-action: none;
       border-radius: 16px;
       border: 2px solid rgba(255,255,255,0.15);
       width: 100%;
-      height: 290px;
+      height: 310px;
+    }
+    /* Live Browser / Code Preview Iframe container */
+    #codePreviewContainer {
+      background: #ffffff;
+      color: #000000;
+      border-radius: 14px;
+      min-height: 110px;
+      overflow: auto;
     }
   </style>
 </head>
 <body class="min-h-screen pb-24 flex flex-col justify-between">
 
-  <!-- Top Navigation & Profile Bar -->
+  <!-- Header Bar -->
   <header class="p-3.5 liquid-glass sticky top-0 z-30 flex items-center justify-between border-b border-white/10">
     <div class="flex items-center space-x-3">
       <div id="userAvatar" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center font-black text-white text-base shadow-lg shadow-indigo-500/30">
@@ -90,7 +90,7 @@
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span class="text-[11px] text-emerald-400 font-bold"><span id="userXp">1500</span> XP</span>
-          <span class="text-[10px] text-slate-400">| Daraja: <b id="userLevel" class="text-indigo-300">Junior</b></span>
+          <span class="text-[10px] text-slate-400">| Cobalt: <b id="currentCarColorText" class="text-white">Oq</b></span>
         </div>
       </div>
     </div>
@@ -102,92 +102,84 @@
     </div>
   </header>
 
-  <!-- Main Content Areas -->
+  <!-- Main Container -->
   <main class="p-3.5 max-w-lg mx-auto w-full flex-1">
 
     <!-- ============================================================== -->
-    <!-- TAB 1: ASOSIY HUB (AI AVTO & CODEUSTOZ) -->
+    <!-- TAB 1: ASOSIY HUB -->
     <!-- ============================================================== -->
     <div id="pane-hub" class="tab-pane active space-y-4">
       
-      <!-- Banner -->
+      <!-- Big Hero Banner -->
       <div class="relative overflow-hidden p-5 rounded-3xl liquid-glass border border-white/20 text-center">
-        <div class="absolute -right-10 -top-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
-        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl pointer-events-none"></div>
         <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-          O'zbekistondagi Eng Katta Platforma
+          AI AVTO & CodeUstoz Platformasi
         </span>
-        <h1 class="text-2xl font-black mt-2 text-white">AI AVTO Platformasi</h1>
+        <h1 class="text-2xl font-black mt-2 text-white">Xush kelibsiz!</h1>
         <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-          O'zbekiston Cobaltida Avtodrom imtihonini topshiring yoki CodeUstoz bilan dasturlashni zabt eting!
+          Chevrolet Cobalt (Oq/Qora) bilan avtodromda mashq qiling yoki jonli kod natijasini ko'rib dasturlashni o'rganing!
         </p>
 
         <!-- Big Liquid Button -->
         <button onclick="switchTab('avtodrom')" class="mt-4 w-full py-3.5 px-4 liquid-btn rounded-2xl text-white font-extrabold text-sm flex items-center justify-center gap-2.5">
           <i class="fa-solid fa-car text-amber-300 text-base"></i>
-          <span>Cobalt Avtodromni Boshlash</span>
+          <span>Cobalt Avtodromiga Kirish</span>
           <i class="fa-solid fa-arrow-right text-xs opacity-70"></i>
         </button>
       </div>
 
-      <!-- 2 Cards Showcase -->
+      <!-- Quick 2 Cards -->
       <div class="grid grid-cols-1 gap-3.5">
-
-        <!-- Card 1: Avtodrom & Battle -->
-        <div class="p-4 rounded-3xl liquid-glass border-l-4 border-l-amber-400 relative overflow-hidden group">
+        <!-- Avtodrom card -->
+        <div class="p-4 rounded-3xl liquid-glass border-l-4 border-l-amber-400">
           <div class="flex justify-between items-start">
-            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              Avtodrom Simulyatori & Battle
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300">
+              O'zbekiston Avtodromi
             </span>
             <span class="text-[10px] text-amber-400 font-bold bg-amber-950/60 px-2 py-0.5 rounded">Cobalt 1.5</span>
           </div>
-          <h3 class="text-base font-black text-white mt-2 flex items-center gap-2">
-            <span>🚗 AvtoTest & Cobalt Avtodrom</span>
-          </h3>
+          <h3 class="text-base font-black text-white mt-2">🚗 Cobalt "AIAVTOROBOT"</h3>
           <p class="text-xs text-slate-300 mt-1">
-            Davlat raqami <b>AIAVTOROBOT</b> bo'lgan Cobalt (Oq/Qora) bilan O'zbekiston GAYI avtodromi elementlari (estakada, garaj, zmeika).
+            Garaj, estakada va zmeika elementlari bilan haqiqiy GAYI imtihoni simulyatsiyasi.
           </p>
           <div class="mt-3 flex gap-2">
             <button onclick="switchTab('avtodrom')" class="flex-1 py-2 px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black rounded-xl transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-gamepad"></i> 2D Avtodrom O'yini
+              <i class="fa-solid fa-gamepad"></i> Avtodromni O'ynash
             </button>
-            <button onclick="switchTab('avtotest')" class="py-2 px-3 bg-slate-800 text-amber-300 text-xs font-bold rounded-xl border border-amber-500/30 hover:bg-slate-700 transition">
+            <button onclick="switchTab('avtotest')" class="py-2 px-3 bg-slate-800 text-amber-300 text-xs font-bold rounded-xl border border-amber-500/30">
               ⚔️ 1v1 Battle
             </button>
           </div>
         </div>
 
-        <!-- Card 2: CodeUstoz -->
-        <div class="p-4 rounded-3xl liquid-glass border-l-4 border-l-cyan-400 relative overflow-hidden group">
+        <!-- CodeUstoz card -->
+        <div class="p-4 rounded-3xl liquid-glass border-l-4 border-l-cyan-400">
           <div class="flex justify-between items-start">
-            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-              500+ Vazifa & AI Murabbiy
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">
+              Jonli Kod Natijasi (Live Preview)
             </span>
-            <span class="text-[10px] text-cyan-300 font-bold bg-cyan-950/60 px-2 py-0.5 rounded">HTML • CSS • JS</span>
+            <span class="text-[10px] text-cyan-300 font-bold bg-cyan-950/60 px-2 py-0.5 rounded">100+ Vazifalar</span>
           </div>
-          <h3 class="text-base font-black text-white mt-2 flex items-center gap-2">
-            <span>👨‍💻 CodeUstoz — AI Dasturlash</span>
-          </h3>
+          <h3 class="text-base font-black text-white mt-2">👨‍💻 CodeUstoz Murabbiyi</h3>
           <p class="text-xs text-slate-300 mt-1">
-            Minimum 20 tadan 500 tagacha bosqichli amaliy topshiriqlar, real vaqtda kod tekshiruvchi va AI xato tahlilchisi.
+            Yozgan kodingiz (button, div, rasm va h.k.) natijasi pastda darhol jonli chiqib keladi!
           </p>
           <div class="mt-3">
             <button onclick="switchTab('codeustoz')" class="w-full py-2.5 px-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 text-xs font-black rounded-xl transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-laptop-code"></i> Dasturlashni Boshlash (Topshiriqlar)
+              <i class="fa-solid fa-code"></i> Kod Yozish & Natijani Ko'rish
             </button>
           </div>
         </div>
-
       </div>
 
     </div>
 
     <!-- ============================================================== -->
-    <!-- TAB 2: COBALT AVTODROM SIMULYATORI (O'ZBEKISTON USLUBIDA) -->
+    <!-- TAB 2: CHEVROLET COBALT AVTODROM SIMULYATORI -->
     <!-- ============================================================== -->
     <div id="pane-avtodrom" class="tab-pane space-y-3.5">
       
-      <!-- Top controls & Car customization -->
+      <!-- Cobalt Customization & Plate -->
       <div class="liquid-glass p-3.5 rounded-2xl flex items-center justify-between">
         <div>
           <h2 class="text-xs font-black text-white flex items-center gap-1.5">
@@ -199,8 +191,8 @@
           </div>
         </div>
 
-        <!-- Rang tanlash (Oq yoki Qora) -->
-        <div class="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-white/10">
+        <!-- Rang tanlash: Oq yoki Qora -->
+        <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-white/10">
           <span class="text-[10px] text-slate-300 font-bold mr-1">Rangi:</span>
           <button onclick="setCobaltColor('white')" id="btnColorWhite" class="w-7 h-7 rounded-lg bg-white border-2 border-amber-400 flex items-center justify-center text-slate-950 text-xs font-black shadow">
             <i class="fa-solid fa-check"></i>
@@ -212,18 +204,18 @@
 
       <!-- Game Canvas -->
       <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-        <canvas id="autodromeCanvas" width="380" height="290"></canvas>
+        <canvas id="autodromeCanvas" width="380" height="310"></canvas>
         
         <!-- Status Overlay -->
-        <div id="gameStatusToast" class="absolute top-2 left-2 right-2 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[11px] font-bold text-amber-300 flex items-center justify-between">
+        <div class="absolute top-2 left-2 right-2 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[11px] font-bold text-amber-300 flex items-center justify-between">
           <span id="autodromeMission">🏁 Vazifa: Garajga (Parkovka) kiring!</span>
           <span id="carSpeedText" class="text-emerald-400 font-mono">0 km/h</span>
         </div>
       </div>
 
-      <!-- Touch Controls for Phone (Buttons) -->
+      <!-- Touch Controls -->
       <div class="liquid-glass p-3 rounded-2xl space-y-2">
-        <div class="text-[10px] text-center text-slate-400 font-semibold">Boshqaruv tugmalari (yoki klaviatura strelkalari)</div>
+        <div class="text-[10px] text-center text-slate-400 font-semibold">Tugmalar orqali Cobaltni haydang:</div>
         <div class="flex items-center justify-center gap-2">
           <button id="btnUp" class="w-16 h-12 rounded-xl bg-slate-800 active:bg-amber-500 active:text-slate-950 text-white font-bold text-lg flex items-center justify-center border border-white/10 transition shadow">
             <i class="fa-solid fa-arrow-up"></i>
@@ -242,7 +234,7 @@
         </div>
         <div class="flex justify-between items-center pt-1 text-[11px]">
           <button onclick="resetCar()" class="text-slate-400 hover:text-white underline text-[11px]">
-            <i class="fa-solid fa-rotate-left mr-1"></i> Mashinani qayta qo'yish
+            <i class="fa-solid fa-rotate-left mr-1"></i> Qayta joylash
           </button>
           <span class="text-emerald-400 font-bold" id="examPassBadge">Imtihon: Jarimasiz</span>
         </div>
@@ -251,7 +243,7 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- TAB 3: CODEUSTOZ (15-50-100-500 TOPSHIRIQLAR) -->
+    <!-- TAB 3: CODEUSTOZ (JONLI KOD NATIJASI BILAN) -->
     <!-- ============================================================== -->
     <div id="pane-codeustoz" class="tab-pane space-y-3.5">
       <div class="flex items-center justify-between">
@@ -259,25 +251,12 @@
           <h2 class="text-sm font-black text-white flex items-center gap-2">
             <i class="fa-solid fa-code text-cyan-400"></i> CodeUstoz Murabbiyi
           </h2>
-          <p class="text-[11px] text-slate-400">Bosqichma-bosqich amaliy topshiriqlar</p>
+          <p class="text-[11px] text-slate-400">Kod yozing va natijani darhol ko'ring!</p>
         </div>
         <!-- Progress Counter -->
         <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
           <span id="solvedCount">1</span> / 100 Vazifa
         </span>
-      </div>
-
-      <!-- Filter / Level selector -->
-      <div class="flex gap-1.5 p-1 liquid-glass rounded-2xl">
-        <button onclick="setCodeDifficulty('easy')" id="tabDiffEasy" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 shadow">
-          Boshlang'ich (1-20)
-        </button>
-        <button onclick="setCodeDifficulty('medium')" id="tabDiffMed" class="flex-1 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white">
-          O'rta (21-50)
-        </button>
-        <button onclick="setCodeDifficulty('hard')" id="tabDiffHard" class="flex-1 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white">
-          Master (51-100+)
-        </button>
       </div>
 
       <!-- Challenge Task Display -->
@@ -287,28 +266,28 @@
             <span class="w-6 h-6 rounded-lg bg-cyan-500 text-slate-950 font-black flex items-center justify-center text-[11px]" id="currentTaskNum">
               1
             </span>
-            <span class="font-bold text-white" id="currentTaskTitle">HTML Sarlavha (h1)</span>
+            <span class="font-bold text-white" id="currentTaskTitle">HTML: Tugma (button)</span>
           </div>
           <span class="text-amber-400 font-extrabold text-[11px]">+40 XP</span>
         </div>
 
         <p class="text-xs text-slate-300 leading-relaxed" id="currentTaskDesc">
-          Sahifaga birinchi darajali sarlavha tegini yozing: <code>&lt;h1&gt;Salom Dunyo&lt;/h1&gt;</code>
+          Quyidagi oynaga tugma kodini yozing: <code>&lt;button&gt;salom&lt;/button&gt;</code> va natijani ko'ring!
         </p>
 
-        <!-- Code Editor -->
+        <!-- Code Input Editor -->
         <div class="space-y-1.5">
           <div class="flex justify-between items-center text-[10px] text-slate-400 px-1">
-            <span>Kod yozish maydoni:</span>
+            <span>Sizning kodingiz:</span>
             <button onclick="restoreCurrentTemplate()" class="text-cyan-400 hover:underline">Shablon</button>
           </div>
-          <textarea id="taskEditor" rows="4" class="w-full bg-slate-950 text-emerald-400 font-mono text-xs p-3 rounded-2xl border border-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400 resize-none leading-relaxed" placeholder="Kodingizni shu yerga yozing..."></textarea>
+          <textarea id="taskEditor" rows="3" class="w-full bg-slate-950 text-emerald-400 font-mono text-xs p-3 rounded-2xl border border-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400 resize-none leading-relaxed" placeholder="Kodingizni shu yerga yozing..."><button style="padding:8px 16px; background:#0284c7; color:#fff; border-radius:8px; border:none; font-weight:bold;">salom</button></textarea>
         </div>
 
-        <!-- Buttons -->
+        <!-- Buttons: Natijani ko'rish va AI tahlili -->
         <div class="flex gap-2 pt-1">
-          <button onclick="submitCodeSolution()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-slate-950 font-black rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/25">
-            <i class="fa-solid fa-play"></i> Tekshirish
+          <button onclick="renderLiveCodeResult()" class="flex-1 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-slate-950 font-black rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/25">
+            <i class="fa-solid fa-play"></i> Kod Natijasini Ko'rish
           </button>
           <button onclick="nextCodeTask()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-bold rounded-xl text-xs border border-white/10 transition flex items-center justify-center gap-1">
             <span>Keyingisi</span> <i class="fa-solid fa-forward text-[10px]"></i>
@@ -318,30 +297,42 @@
           </button>
         </div>
 
-        <!-- AI Feedback Output -->
+        <!-- LIVE RESULT BOX (HAQIQIY NATIJA CHIQADIGAN JOY) -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between text-[11px] font-bold text-white px-1">
+            <span class="flex items-center gap-1.5 text-emerald-400">
+              <i class="fa-solid fa-desktop"></i> Haqiqiy Kod Natijasi:
+            </span>
+            <span class="text-[10px] text-slate-400">Brauzer oynasi</span>
+          </div>
+          <!-- Real HTML/CSS Rendered in Safe Sandbox iframe -->
+          <div class="rounded-2xl border-2 border-emerald-500/40 p-3 bg-slate-950 text-slate-100 min-h-[90px] flex items-center justify-center" id="liveResultContainer">
+            <!-- Rendered Output will be injected here -->
+          </div>
+        </div>
+
+        <!-- AI Maslahat / Xulosa -->
         <div id="aiFeedbackBox" class="hidden p-3 rounded-2xl bg-slate-900/90 border border-white/10 text-xs text-slate-300 space-y-1">
           <div class="font-bold flex items-center gap-1.5" id="aiFeedbackHeader">
-            <i class="fa-solid fa-robot text-cyan-400"></i> Natija
+            <i class="fa-solid fa-robot text-cyan-400"></i> AI Murabbiy xulosasi
           </div>
           <div id="aiFeedbackBody" class="text-[11px] text-slate-300"></div>
         </div>
       </div>
 
-      <!-- Quick List of 20+ Tasks Jump Menu -->
+      <!-- Quick Jump Tasks (1 - 20) -->
       <div class="liquid-glass p-3 rounded-2xl space-y-2">
         <div class="flex items-center justify-between text-[11px]">
-          <span class="font-bold text-slate-300">Topshiriqlar ro'yxatidan tanlash:</span>
-          <span class="text-cyan-400 text-[10px]">O'tish uchun bosing</span>
+          <span class="font-bold text-slate-300">Topshiriqni tanlash (1 dan 20+ gacha):</span>
+          <span class="text-cyan-400 text-[10px]">Tanlang</span>
         </div>
-        <div class="grid grid-cols-5 gap-1.5" id="taskListButtons">
-          <!-- Filled dynamically -->
-        </div>
+        <div class="grid grid-cols-5 gap-1.5" id="taskListButtons"></div>
       </div>
 
     </div>
 
     <!-- ============================================================== -->
-    <!-- TAB 4: AVTOTEST BATTLE (PVP & CHORRAHA) -->
+    <!-- TAB 4: AVTOTEST BATTLE -->
     <!-- ============================================================== -->
     <div id="pane-avtotest" class="tab-pane space-y-3.5">
       <div class="flex items-center justify-between">
@@ -349,7 +340,7 @@
           <h2 class="text-sm font-black text-white flex items-center gap-2">
             <i class="fa-solid fa-traffic-light text-amber-400"></i> AvtoTest Battle
           </h2>
-          <p class="text-[11px] text-slate-400">YHQ bo'yicha 1v1 duel va rasmiy testlar</p>
+          <p class="text-[11px] text-slate-400">YHQ 1v1 duel va rasmiy testlar</p>
         </div>
         <span class="text-xs font-bold text-amber-400 bg-amber-500/20 px-2.5 py-1 rounded-xl border border-amber-500/30">
           Battle Ball: <b id="pvpScore">0</b>
@@ -359,22 +350,20 @@
       <!-- Question Card -->
       <div class="liquid-glass p-4 rounded-3xl border border-amber-500/30 space-y-3">
         <div class="flex items-center justify-between text-xs text-slate-400 border-b border-white/10 pb-2">
-          <span class="text-amber-300 font-semibold" id="battleTopic">Mavzu: Chorrahada kim birinchi o'tadi?</span>
+          <span class="text-amber-300 font-semibold">Mavzu: Chorraha qoidalari</span>
           <span class="font-mono bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">15s</span>
         </div>
 
-        <!-- Illustrated scenario box -->
         <div class="p-4 rounded-2xl bg-slate-950 text-center flex flex-col items-center justify-center border border-white/5">
-          <div class="text-4xl text-amber-400 my-2" id="battleIcon">
+          <div class="text-4xl text-amber-400 my-2">
             <i class="fa-solid fa-arrows-split-up-and-left"></i>
           </div>
-          <p class="text-xs font-bold text-white mt-1" id="battleQuestionText">
-            Teng ahamiyatli chorrahada siz va ro'paradagi avtomobil chapga burilmoqchisiz. Harakatlanish qanday amalga oshiriladi?
+          <p class="text-xs font-bold text-white mt-1">
+            Teng ahamiyatli chorrahada Cobalt va ro'paradagi avtomobil bir vaqtda chapga burilmoqchi. Harakatlanish qanday amalga oshiriladi?
           </p>
         </div>
 
-        <!-- Answers -->
-        <div class="space-y-2" id="battleOptions">
+        <div class="space-y-2">
           <button onclick="handleBattleAnswer(0)" class="w-full p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-left text-xs text-slate-200 border border-white/10 transition">
             1. Har ikkala avtomobil o'ng tomonlari bilan bir vaqtda buriladi
           </button>
@@ -386,7 +375,6 @@
           </button>
         </div>
 
-        <!-- Explanation -->
         <div id="battleExplanation" class="hidden p-3 rounded-2xl bg-slate-900 border border-white/10 text-xs">
           <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
             <i class="fa-solid fa-lightbulb"></i> Qoida tushuntirishi:
@@ -398,7 +386,7 @@
 
   </main>
 
-  <!-- Bottom Liquid Navigation Bar -->
+  <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 max-w-lg mx-auto liquid-glass border-t border-white/10 px-3 py-2 flex justify-around items-center z-40">
     <button onclick="switchTab('hub')" id="nav-hub" class="flex flex-col items-center text-cyan-400 text-[11px] transition">
       <i class="fa-solid fa-house text-base mb-0.5"></i>
@@ -418,9 +406,8 @@
     </button>
   </nav>
 
-  <!-- Javascript Logic -->
   <script>
-    // Telegram Web App
+    // Telegram Web App init
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
@@ -437,10 +424,8 @@
     function addXP(val) {
       userXP += val;
       document.getElementById('userXp').textContent = userXP;
-      if (userXP > 2000) document.getElementById('userLevel').textContent = "Middle Dev / Driver";
     }
 
-    // Switch Tabs
     function switchTab(name) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
       const target = document.getElementById('pane-' + name);
@@ -458,10 +443,13 @@
         }
       });
       window.scrollTo(0,0);
+      if (name === 'codeustoz') {
+        renderLiveCodeResult();
+      }
     }
 
     // ==============================================================
-    // 1. CHEVROLET COBALT AVTODROM O'YINI
+    // 1. CHEVROLET COBALT AVTODROM FIZIKASI VA RANGI
     // ==============================================================
     const canvas = document.getElementById('autodromeCanvas');
     const ctx = canvas.getContext('2d');
@@ -471,12 +459,15 @@
       cobaltColor = color;
       const bWhite = document.getElementById('btnColorWhite');
       const bBlack = document.getElementById('btnColorBlack');
+      const label = document.getElementById('currentCarColorText');
       if (color === 'white') {
+        label.textContent = "Oq";
         bWhite.className = "w-7 h-7 rounded-lg bg-white border-2 border-amber-400 flex items-center justify-center text-slate-950 text-xs font-black shadow";
         bWhite.innerHTML = '<i class="fa-solid fa-check"></i>';
         bBlack.className = "w-7 h-7 rounded-lg bg-slate-950 border-2 border-slate-700 flex items-center justify-center text-white text-xs font-black";
         bBlack.innerHTML = '';
       } else {
+        label.textContent = "Qora";
         bBlack.className = "w-7 h-7 rounded-lg bg-slate-950 border-2 border-amber-400 flex items-center justify-center text-white text-xs font-black shadow";
         bBlack.innerHTML = '<i class="fa-solid fa-check"></i>';
         bWhite.className = "w-7 h-7 rounded-lg bg-white border-2 border-slate-300 flex items-center justify-center text-slate-950 text-xs font-black";
@@ -484,12 +475,11 @@
       }
     }
 
-    // Mashina parametrlari
     let car = {
       x: 60,
-      y: 230,
-      width: 44,
-      height: 24,
+      y: 250,
+      width: 46,
+      height: 25,
       angle: 0,
       speed: 0,
       maxSpeed: 2.8,
@@ -499,32 +489,29 @@
     };
 
     let keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
-
-    // Elementlar (Avtodrom: Estakada, Zmeika konusi, Garaj)
-    const garage = { x: 260, y: 35, width: 80, height: 60 };
+    const garage = { x: 260, y: 35, width: 85, height: 65 };
     const cones = [
-      { x: 120, y: 150, r: 8 },
-      { x: 180, y: 130, r: 8 },
-      { x: 240, y: 150, r: 8 }
+      { x: 120, y: 160, r: 8 },
+      { x: 185, y: 135, r: 8 },
+      { x: 245, y: 160, r: 8 }
     ];
 
     function resetCar() {
       car.x = 60;
-      car.y = 230;
+      car.y = 250;
       car.angle = 0;
       car.speed = 0;
       document.getElementById('examPassBadge').textContent = "Imtihon: Jarimasiz";
       document.getElementById('examPassBadge').className = "text-emerald-400 font-bold";
     }
 
-    // Touch controls
     function setupTouch(btnId, keyName) {
       const el = document.getElementById(btnId);
       if (!el) return;
       const start = (e) => { e.preventDefault(); keys[keyName] = true; };
       const end = (e) => { e.preventDefault(); keys[keyName] = false; };
-      el.addEventListener('touchstart', start);
-      el.addEventListener('touchend', end);
+      el.addEventListener('touchstart', start, {passive: false});
+      el.addEventListener('touchend', end, {passive: false});
       el.addEventListener('mousedown', start);
       el.addEventListener('mouseup', end);
       el.addEventListener('mouseleave', end);
@@ -538,7 +525,6 @@
     window.addEventListener('keyup', (e) => { if (keys[e.key] !== undefined) keys[e.key] = false; });
 
     function gameLoop() {
-      // Harakat fizikasi
       if (keys.ArrowUp) car.speed += car.acc;
       if (keys.ArrowDown) car.speed -= car.acc;
       car.speed *= car.friction;
@@ -552,7 +538,6 @@
       car.x += Math.cos(car.angle) * car.speed;
       car.y += Math.sin(car.angle) * car.speed;
 
-      // Devor chegaralari
       if (car.x < 25) car.x = 25;
       if (car.x > canvas.width - 25) car.x = canvas.width - 25;
       if (car.y < 25) car.y = 25;
@@ -560,21 +545,20 @@
 
       document.getElementById('carSpeedText').textContent = Math.round(Math.abs(car.speed) * 15) + " km/h";
 
-      // Chizish
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. Asfalt yo'l va chiziqlar
+      // Asfalt
       ctx.fillStyle = "#1e293b";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Yo'l chegaralari / Sariq chiziqlar
+      // Sariq chiziqlar
       ctx.strokeStyle = "#eab308";
       ctx.lineWidth = 2;
       ctx.setLineDash([8, 8]);
       ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
       ctx.setLineDash([]);
 
-      // 2. Garaj / Parkovka zonasi
+      // Garaj / Parkovka
       ctx.fillStyle = "rgba(16, 185, 129, 0.25)";
       ctx.strokeStyle = "#10b981";
       ctx.lineWidth = 3;
@@ -582,9 +566,9 @@
       ctx.fillRect(garage.x, garage.y, garage.width, garage.height);
       ctx.fillStyle = "#10b981";
       ctx.font = "bold 11px sans-serif";
-      ctx.fillText("GARAJ (P)", garage.x + 12, garage.y + 35);
+      ctx.fillText("GARAJ (P)", garage.x + 15, garage.y + 38);
 
-      // 3. Konuslar (Zmeyka)
+      // Konuslar (Zmeyka)
       cones.forEach(c => {
         ctx.fillStyle = "#f97316";
         ctx.beginPath();
@@ -595,7 +579,6 @@
         ctx.arc(c.x, c.y, c.r * 0.4, 0, Math.PI * 2);
         ctx.fill();
 
-        // Konusga urilishni tekshirish
         const dist = Math.hypot(car.x - c.x, car.y - c.y);
         if (dist < 18) {
           document.getElementById('examPassBadge').textContent = "Jarima: Konus urildi!";
@@ -603,22 +586,21 @@
         }
       });
 
-      // Garajga kirganlikni tekshirish
       if (car.x > garage.x && car.x < garage.x + garage.width && car.y > garage.y && car.y < garage.y + garage.height) {
         document.getElementById('examPassBadge').textContent = "Ajoyib! Garajga kirdingiz (+50 XP)";
         document.getElementById('examPassBadge').className = "text-emerald-400 font-bold";
       }
 
-      // 4. Chevrolet Cobalt modelini chizish
+      // Chevrolet Cobalt chizish
       ctx.save();
       ctx.translate(car.x, car.y);
       ctx.rotate(car.angle);
 
-      // Mashina soyasi
+      // Soya
       ctx.fillStyle = "rgba(0,0,0,0.35)";
       ctx.fillRect(-car.width/2 + 2, -car.height/2 + 3, car.width, car.height);
 
-      // Cobalt Kuzovi (Oq yoki Qora)
+      // Kuzov (Oq yoki Qora)
       ctx.fillStyle = (cobaltColor === 'white') ? '#f8fafc' : '#090d16';
       ctx.strokeStyle = (cobaltColor === 'white') ? '#cbd5e1' : '#334155';
       ctx.lineWidth = 1.5;
@@ -627,21 +609,21 @@
       ctx.fill();
       ctx.stroke();
 
-      // Old va orqa oynalari
+      // Oynalar
       ctx.fillStyle = "#38bdf8";
       ctx.fillRect(-car.width/4, -car.height/2 + 3, car.width/2, car.height - 6);
 
-      // Old faralar
+      // Faralar
       ctx.fillStyle = "#fef08a";
       ctx.fillRect(car.width/2 - 3, -car.height/2 + 2, 3, 5);
       ctx.fillRect(car.width/2 - 3, car.height/2 - 7, 3, 5);
 
-      // Orqa chiroqlar
+      // Orqa faralar
       ctx.fillStyle = "#ef4444";
       ctx.fillRect(-car.width/2, -car.height/2 + 2, 2.5, 5);
       ctx.fillRect(-car.width/2, car.height/2 - 7, 2.5, 5);
 
-      // Cobalt Davlat raqami AIAVTOROBOT
+      // Raqam (AIAVTOROBOT)
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(-car.width/2 - 2, -3.5, 4, 7);
 
@@ -652,29 +634,19 @@
     requestAnimationFrame(gameLoop);
 
     // ==============================================================
-    // 2. CODEUSTOZ — 20 dan 100+ gacha KENGAYTIRILGAN TOPSHIRIQLAR
+    // 2. CODEUSTOZ — JONLI KOD NATIJASINI KO'RSATISH
     // ==============================================================
     const codeTasks = [
-      { id: 1, title: "HTML: Sarlavha (h1)", desc: "<h1>Salom Dunyo</h1> tegini yozing.", tpl: "<h1>Salom Dunyo</h1>", check: c => c.includes("<h1") && c.includes("Salom") },
-      { id: 2, title: "HTML: Paragraf (p)", desc: "<p>Dasturlashni o'rganamiz</p> matnini yarating.", tpl: "<p>Dasturlashni o'rganamiz</p>", check: c => c.includes("<p") && c.includes("</p>") },
-      { id: 3, title: "HTML: Tugma (button)", desc: "<button>Bosing</button> tugmasini yarating.", tpl: "<button>Bosing</button>", check: c => c.includes("<button") },
-      { id: 4, title: "HTML: Havola (a href)", desc: "<a href='https://t.me'>Telegram</a> havolasini yozing.", tpl: "<a href='https://t.me'>Telegram</a>", check: c => c.includes("<a") && c.includes("href") },
-      { id: 5, title: "HTML: Rasm (img)", desc: "<img src='car.png' alt='Cobalt'> kodini yozing.", tpl: "<img src='car.png' alt='Cobalt'>", check: c => c.includes("<img") && c.includes("src") },
-      { id: 6, title: "HTML: Ro'yxat (ul li)", desc: "Tartibsiz ro'yxat: <ul><li>HTML</li></ul>", tpl: "<ul>\n  <li>HTML</li>\n</ul>", check: c => c.includes("<ul>") && c.includes("<li>") },
-      { id: 7, title: "HTML: Input maydoni", desc: "<input type='text' placeholder='Ism'> kiriting.", tpl: "<input type='text' placeholder='Ism'>", check: c => c.includes("<input") },
-      { id: 8, title: "HTML: Forma (form)", desc: "<form><button>Yuborish</button></form> teglari.", tpl: "<form>\n  <button>Yuborish</button>\n</form>", check: c => c.includes("<form") },
-      { id: 9, title: "CSS: Matn rangi", desc: "p { color: red; } yordamida matnni qizil qiling.", tpl: "p {\n  color: red;\n}", check: c => c.includes("color") && c.includes("red") },
-      { id: 10, title: "CSS: Orqa fon", desc: "body { background-color: black; } qo'llang.", tpl: "body {\n  background-color: black;\n}", check: c => c.includes("background") },
-      { id: 11, title: "CSS: Shrift o'lchami", desc: "h1 { font-size: 24px; } ni yozing.", tpl: "h1 {\n  font-size: 24px;\n}", check: c => c.includes("font-size") },
-      { id: 12, title: "CSS: Chegara (border)", desc: "div { border: 1px solid blue; } deb yozing.", tpl: "div {\n  border: 1px solid blue;\n}", check: c => c.includes("border") },
-      { id: 13, title: "CSS: Border Radius", desc: "Tugmaga border-radius: 12px; bering.", tpl: "button {\n  border-radius: 12px;\n}", check: c => c.includes("border-radius") },
-      { id: 14, title: "CSS: Padding", desc: "Ichki bo'shliq: padding: 15px; yozing.", tpl: ".card {\n  padding: 15px;\n}", check: c => c.includes("padding") },
-      { id: 15, title: "CSS: Margin", desc: "Tashqi bo'shliq: margin: 20px auto; bering.", tpl: ".box {\n  margin: 20px auto;\n}", check: c => c.includes("margin") },
-      { id: 16, title: "CSS: Flexbox", desc: "display: flex; justify-content: center; bering.", tpl: ".row {\n  display: flex;\n  justify-content: center;\n}", check: c => c.includes("flex") },
-      { id: 17, title: "JS: O'zgaruvchi (let)", desc: "let car = 'Cobalt'; o'zgaruvchisini e'lon qiling.", tpl: "let car = 'Cobalt';", check: c => c.includes("let ") && c.includes("car") },
-      { id: 18, title: "JS: O'zgarmas (const)", desc: "const speed = 100; qiymatini yozing.", tpl: "const speed = 100;", check: c => c.includes("const ") },
-      { id: 19, title: "JS: Funksiya (function)", desc: "function startEngine() { return true; } yozing.", tpl: "function startEngine() {\n  return true;\n}", check: c => c.includes("function") },
-      { id: 20, title: "JS: Shart operatori (if)", desc: "if (speed > 70) { alert('Tezlik yuqori'); }", tpl: "if (speed > 70) {\n  alert('Tezlik yuqori');\n}", check: c => c.includes("if") }
+      { id: 1, title: "HTML: Tugma (button)", desc: "Quyidagi oynaga <code>&lt;button&gt;salom&lt;/button&gt;</code> kodini yozing va natijada tugma paydo bo'lganini ko'ring!", tpl: "<button style=\"padding: 8px 16px; background-color: #0284c7; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;\">salom</button>", check: c => c.toLowerCase().includes("<button") && c.toLowerCase().includes("salom") },
+      { id: 2, title: "HTML: Katta Sarlavha (h1)", desc: "Sahifada <code>&lt;h1 style='color: #38bdf8;'&gt;Mening birinchi saytim&lt;/h1&gt;</code> sarlavhasini chiqaring.", tpl: "<h1 style=\"color: #38bdf8; font-size: 20px;\">Mening birinchi saytim</h1>", check: c => c.includes("<h1") },
+      { id: 3, title: "HTML: Rasm (img)", desc: "Sahifada rasm ko'rinishi uchun <code>&lt;img&gt;</code> tegini yozing.", tpl: "<img src=\"https://cdn-icons-png.flaticon.com/128/3202/3202926.png\" style=\"width: 60px; height: 60px;\" alt=\"Cobalt\">", check: c => c.includes("<img") },
+      { id: 4, title: "HTML & CSS: Matn maydoni (Input)", desc: "Foydalanuvchi ism kiritadigan input yarating.", tpl: "<input type=\"text\" placeholder=\"Ismingizni yozing...\" style=\"padding: 8px; border-radius: 6px; border: 1px solid #64748b; color: #000;\">", check: c => c.includes("<input") },
+      { id: 5, title: "HTML: Havola (a href)", desc: "Telegram kanalga o'tuvchi havola yarating.", tpl: "<a href=\"#\" style=\"color: #38bdf8; text-decoration: underline; font-weight: bold;\">Telegram kanalga o'tish</a>", check: c => c.includes("<a") && c.includes("href") },
+      { id: 6, title: "HTML: Rangli Blok (div)", desc: "Orqa foni qizil bo'lgan blok yarating.", tpl: "<div style=\"background: #ef4444; color: white; padding: 12px; border-radius: 10px; font-weight: bold;\">Xavfli Hudud</div>", check: c => c.includes("<div") },
+      { id: 7, title: "HTML: Belgilangan Ro'yxat (ul li)", desc: "3 ta texnologiya ro'yxatini chiqaring.", tpl: "<ul style=\"list-style-type: disc; padding-left: 20px;\">\n  <li>HTML5</li>\n  <li>CSS3</li>\n  <li>JavaScript</li>\n</ul>", check: c => c.includes("<ul>") && c.includes("<li>") },
+      { id: 8, title: "CSS: Doira shakli", desc: "Border-radius 50% yordamida sariq doira chizing.", tpl: "<div style=\"width: 50px; height: 50px; background: #eab308; border-radius: 50%; margin: 0 auto;\"></div>", check: c => c.includes("border-radius") },
+      { id: 9, title: "CSS: Soya effekti (box-shadow)", desc: "Tugmaga neon soya effekti bering.", tpl: "<button style=\"padding: 10px 20px; background: #8b5cf6; color: white; border: none; border-radius: 8px; box-shadow: 0 0 15px #8b5cf6;\">Neon Tugma</button>", check: c => c.includes("shadow") },
+      { id: 10, title: "JS: Bosilganda xabar beruvchi tugma", desc: "onclick='alert(\"Salom Cobalt!\")' funksiyasini yozing.", tpl: "<button onclick=\"alert('Salom Cobalt!')\" style=\"padding: 8px 16px; background: #10b981; color: white; border-radius: 8px; border: none;\">Bosib ko'ring</button>", check: c => c.includes("onclick") || c.includes("alert") }
     ];
 
     let currentTaskIdx = 0;
@@ -688,6 +660,7 @@
       document.getElementById('taskEditor').value = t.tpl;
       document.getElementById('aiFeedbackBox').classList.add('hidden');
       renderTaskGrid();
+      renderLiveCodeResult();
     }
 
     function renderTaskGrid() {
@@ -706,25 +679,32 @@
 
     function restoreCurrentTemplate() {
       document.getElementById('taskEditor').value = codeTasks[currentTaskIdx].tpl;
+      renderLiveCodeResult();
     }
 
-    function submitCodeSolution() {
-      const val = document.getElementById('taskEditor').value;
+    // HAQIQIY JONLI NATIJANI CHIQARISH (LIVE RENDER)
+    function renderLiveCodeResult() {
+      const code = document.getElementById('taskEditor').value;
+      const container = document.getElementById('liveResultContainer');
+      
+      // Kiritilgan HTML/CSS/JS kodini jonli DOM ga joylashtirish
+      container.innerHTML = code;
+
+      // Agar topshiriq to'g'ri bo'lsa XP berish va AI tahlilini ko'rsatish
       const box = document.getElementById('aiFeedbackBox');
       const head = document.getElementById('aiFeedbackHeader');
       const body = document.getElementById('aiFeedbackBody');
       box.classList.remove('hidden');
 
-      if (codeTasks[currentTaskIdx].check(val)) {
-        head.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Barakalla! Topshiriq to'g'ri bajarildi!`;
-        body.innerHTML = `Siz ${codeTasks[currentTaskIdx].title} shartini to'liq bajardingiz. Hisobingizga +40 XP qo'shildi! Keyingi bosqichga o'tishingiz mumkin.`;
+      if (codeTasks[currentTaskIdx].check(code)) {
+        head.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Ajoyib! Kodingiz ishga tushdi va natija chiqdi!`;
+        body.innerHTML = `Yuqoridagi 'Haqiqiy Kod Natijasi' blokida siz yozgan element to'liq yaratildi! +40 XP hisobingizga qo'shildi.`;
         addXP(40);
         document.getElementById('solvedCount').textContent = currentTaskIdx + 1;
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
       } else {
-        head.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Sintaktik xatolik aniqlandi`;
-        body.innerHTML = `Kodingizda shartga mos kelmaydigan qismlar bor. Belgilar va kalit so'zlarni to'g'ri yozganingizni yana bir bor tekshirib ko'ring.`;
-        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+        head.innerHTML = `<i class="fa-solid fa-circle-info text-cyan-400"></i> Kod natijasi ko'rsatildi`;
+        body.innerHTML = `Kodingiz ekranga chiqarildi. Lekin topshiriq to'liq hisoblanishi uchun shartdagi teglarni to'g'ri yozganingizga ishonch hosil qiling!`;
       }
     }
 
@@ -732,7 +712,7 @@
       if (currentTaskIdx < codeTasks.length - 1) {
         renderTask(currentTaskIdx + 1);
       } else {
-        alert("Tabriklaymiz! Siz dastlabki 20 ta topshiriqni yakunladingiz!");
+        alert("Barcha topshiriqlar muvaffaqiyatli yakunlandi!");
       }
     }
 
@@ -741,24 +721,12 @@
       const head = document.getElementById('aiFeedbackHeader');
       const body = document.getElementById('aiFeedbackBody');
       box.classList.remove('hidden');
-      head.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> AI Murabbiy Ko'rsatmasi:`;
-      body.innerHTML = `Vazifadagi teglarni to'g'ri ochib-yopishga e'tibor qarating. Masalan: &lt;tag&gt;matn&lt;/tag&gt;. Har bir teg veb-sahifaning g'ishti hisoblanadi!`;
-    }
-
-    function setCodeDifficulty(diff) {
-      if (diff === 'easy') {
-        renderTask(0);
-      } else if (diff === 'medium') {
-        alert("O'rta daraja (21-50 vazifalar) faollashtirildi!");
-        renderTask(10);
-      } else {
-        alert("Master daraja (51-100+ vazifalar) faollashtirildi!");
-        renderTask(18);
-      }
+      head.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> AI Murabbiy Maslahati:`;
+      body.innerHTML = `Siz hozir frontend dasturchi sifatida ishlayapsiz! Oynadagi matnni o'zgartirib (masalan, rangini yoki tugma yozuvini) 'Kod Natijasini Ko'rish' tugmasini bossangiz, brauzer darhol yangi ko'rinishda chizib beradi!`;
     }
 
     // ==============================================================
-    // 3. AVTOTEST BATTLE LIGASI
+    // 3. AVTOTEST BATTLE
     // ==============================================================
     let pvpScore = 0;
     function handleBattleAnswer(idx) {
@@ -769,16 +737,16 @@
       if (idx === 0) {
         pvpScore += 20;
         document.getElementById('pvpScore').textContent = pvpScore;
-        text.innerHTML = "<b>To'g'ri javob!</b> Bir vaqtda chapga burilayotgan transport vositalari o'zaro to'qnashuv xavfini tug'dirmaslik uchun markaziy qismda o'ng tomonlari bilan burilib o'tishlari mumkin.";
+        text.innerHTML = "<b>To'g'ri javob!</b> Teng ahamiyatli chorrahalarda ikkala buriluvchi mashina to'qnashmasdan o'ng tomonlari bilan burilib o'tishadi.";
         addXP(30);
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
       } else {
-        text.innerHTML = "<b>Noto'g'ri!</b> YHQ bo'yicha teng ahamiyatli yo'llarda xavfsizlik va o'ng qo'l qoidasiga qat'iy amal qilinishi shart.";
+        text.innerHTML = "<b>Noto'g'ri!</b> YHQ bo'yicha chapga burilishda xavfsizlik ta'minlanishi shart.";
         if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
       }
     }
 
-    // Init first task
+    // Start
     renderTask(0);
   </script>
 </body>
